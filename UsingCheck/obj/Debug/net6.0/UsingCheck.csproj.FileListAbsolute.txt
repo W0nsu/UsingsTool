@@ -1,0 +1,15 @@
+C:\Users\Nerd\source\repos\UsingCheck\UsingCheck\obj\Debug\net6.0\UsingCheck.csproj.AssemblyReference.cache
+C:\Users\Nerd\source\repos\UsingCheck\UsingCheck\obj\Debug\net6.0\UsingCheck.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Nerd\source\repos\UsingCheck\UsingCheck\obj\Debug\net6.0\UsingCheck.AssemblyInfoInputs.cache
+C:\Users\Nerd\source\repos\UsingCheck\UsingCheck\obj\Debug\net6.0\UsingCheck.AssemblyInfo.cs
+C:\Users\Nerd\source\repos\UsingCheck\UsingCheck\obj\Debug\net6.0\UsingCheck.csproj.CoreCompileInputs.cache
+C:\Users\Nerd\source\repos\UsingCheck\UsingCheck\bin\Debug\net6.0\UsingCheck.exe
+C:\Users\Nerd\source\repos\UsingCheck\UsingCheck\bin\Debug\net6.0\UsingCheck.deps.json
+C:\Users\Nerd\source\repos\UsingCheck\UsingCheck\bin\Debug\net6.0\UsingCheck.runtimeconfig.json
+C:\Users\Nerd\source\repos\UsingCheck\UsingCheck\bin\Debug\net6.0\UsingCheck.dll
+C:\Users\Nerd\source\repos\UsingCheck\UsingCheck\bin\Debug\net6.0\ref\UsingCheck.dll
+C:\Users\Nerd\source\repos\UsingCheck\UsingCheck\bin\Debug\net6.0\UsingCheck.pdb
+C:\Users\Nerd\source\repos\UsingCheck\UsingCheck\obj\Debug\net6.0\UsingCheck.dll
+C:\Users\Nerd\source\repos\UsingCheck\UsingCheck\obj\Debug\net6.0\ref\UsingCheck.dll
+C:\Users\Nerd\source\repos\UsingCheck\UsingCheck\obj\Debug\net6.0\UsingCheck.pdb
+C:\Users\Nerd\source\repos\UsingCheck\UsingCheck\obj\Debug\net6.0\UsingCheck.genruntimeconfig.cache
