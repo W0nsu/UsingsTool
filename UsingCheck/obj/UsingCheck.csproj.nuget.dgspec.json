@@ -1,32 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Nerd\\source\\repos\\UsingCheck\\UsingCheck\\UsingCheck.csproj": {}
+    "/Users/wonsu/Repositories/UsingCheck/UsingCheck/UsingCheck.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Nerd\\source\\repos\\UsingCheck\\UsingCheck\\UsingCheck.csproj": {
+    "/Users/wonsu/Repositories/UsingCheck/UsingCheck/UsingCheck.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Nerd\\source\\repos\\UsingCheck\\UsingCheck\\UsingCheck.csproj",
+        "projectUniqueName": "/Users/wonsu/Repositories/UsingCheck/UsingCheck/UsingCheck.csproj",
         "projectName": "UsingCheck",
-        "projectPath": "C:\\Users\\Nerd\\source\\repos\\UsingCheck\\UsingCheck\\UsingCheck.csproj",
-        "packagesPath": "C:\\Users\\Nerd\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Nerd\\source\\repos\\UsingCheck\\UsingCheck\\obj\\",
+        "projectPath": "/Users/wonsu/Repositories/UsingCheck/UsingCheck/UsingCheck.csproj",
+        "packagesPath": "/Users/wonsu/.nuget/packages/",
+        "outputPath": "/Users/wonsu/Repositories/UsingCheck/UsingCheck/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Nerd\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/wonsu/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -59,7 +52,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.100/RuntimeIdentifierGraph.json"
         }
       }
     }
