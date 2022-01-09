@@ -1,143 +1,169 @@
-﻿global using System.Text.Json;
+﻿#region Usings
 
-TraverseTree("C:\\Dev\\VapianoPortal\\src");
+using GemBox.Spreadsheet;
+using UsingCheck.Helpers;
+
+#endregion
+
+const string solutionPath = "/Users/wonsu/Repositories/UsingCheck/TestProject";
+GenerateUsingsStatistics(solutionPath);
 
 Console.WriteLine("Press any key");
 Console.ReadKey();
 
-static void TraverseTree(string root)
+static void GenerateUsingsStatistics(string solutionPath)
 {
-    
-    // Data structure to hold names of subfolders to be
-    // examined for files.
-    Stack<string> dirs = new Stack<string>();
+	if (!Directory.Exists(solutionPath))
+		throw new ArgumentException("Folder does not exists.");
 
-    var usingsStatistic = new List<UsingCount>();
+	var directoriesToCheck = new Stack<string>();
+	directoriesToCheck.Push(solutionPath);
 
-    if (!Directory.Exists(root))
-    {
-        throw new ArgumentException("Folder does not exists.");
-    }
+	var usingStats = new List<UsingCount>();
 
-    dirs.Push(root);
+	var spinner = new ConsoleSpinner();
+	Console.WriteLine("Processing...");
+	while (directoriesToCheck.Count > 0)
+	{
+		spinner.Turn();
+		var currentDirectory = directoriesToCheck.Pop();
 
-    while (dirs.Count > 0)
-    {
-        if (dirs.Contains("frontend"))
-        {
-            continue;
-        }
-        string currentDir = dirs.Pop();
-        string[] subDirs;
-        try
-        {
-            subDirs = Directory.GetDirectories(currentDir);
-        }
-        // An UnauthorizedAccessException exception will be thrown if we do not have
-        // discovery permission on a folder or file. It may or may not be acceptable
-        // to ignore the exception and continue enumerating the remaining files and
-        // folders. It is also possible (but unlikely) that a DirectoryNotFound exception
-        // will be raised. This will happen if currentDir has been deleted by
-        // another application or thread after our call to Directory.Exists. The
-        // choice of which exceptions to catch depends entirely on the specific task
-        // you are intending to perform and also on how much you know with certainty
-        // about the systems on which this code will run.
-        catch (UnauthorizedAccessException e)
-        {
-            Console.WriteLine(e.Message);
-            continue;
-        }
-        catch (DirectoryNotFoundException e)
-        {
-            Console.WriteLine(e.Message);
-            continue;
-        }
+		GetSubDirectoriesFromDirectory(currentDirectory, out var subDirectories);
+		if (subDirectories is null)
+			continue;
 
-        string[] files = null;
-        try
-        {
-            files = Directory.GetFiles(currentDir);
-        }
-        catch (UnauthorizedAccessException e)
-        {
-            Console.WriteLine(e.Message);
-            continue;
-        }
-        catch (DirectoryNotFoundException e)
-        {
-            Console.WriteLine(e.Message);
-            continue;
-        }
-        // Perform the required action on each file here.
-        // Modify this block to perform your required task.
+		foreach (var directory in subDirectories)
+			directoriesToCheck.Push(directory);
 
-        var progressIndicator = 0;
-        foreach (string file in files)
-        {
-            if (file.Contains("Migrations") || file.Contains("bin") || file.Contains("obj"))
-            {
-                continue;
-            }
-            progressIndicator++;
-            Console.WriteLine($"Progress: { progressIndicator } / {files.Count()}");
-            var usingsInFile = new List<string>();
+		GetFilesFromDirectory(currentDirectory, out var files);
 
-            try
-            {
-                var lines = File.ReadAllLines(file);
-                foreach (var line in lines)
-                {
-                    if (line.StartsWith("using"))
-                    {
-                        usingsInFile.Add(line);
-                    }
-                }
+		if (files is null)
+			continue;
 
-                foreach (var singleUsing in usingsInFile)
-                {
-                    var existingUsing = usingsStatistic.FirstOrDefault(x => x.UsingName.Equals(singleUsing));
-                    if (existingUsing is not null)
-                    {
-                        existingUsing.Count++;
-                    }
-                    else
-                    {
-                        usingsStatistic.Add(new UsingCount(singleUsing));
-                    }
-                }
-            }
-            catch (FileNotFoundException e)
-            {
-                // If file was deleted by a separate application
-                //  or thread since the call to TraverseTree()
-                // then just continue.
-                Console.WriteLine(e.Message);
-                continue;
-            }
-        }
+		foreach (var file in files)
+		{
+			var usingsInFile = GetUsingsFromFile(file);
+			if (usingsInFile is null)
+				continue;
 
-        usingsStatistic = usingsStatistic.OrderByDescending(x => x.Count).ToList();
+			AddUsingsFromFileToStatistics(usingsInFile, usingStats);
+		}
+	}
 
-        // Push the subdirectories onto the stack for traversal.
-        // This could also be done before handing the files.
-        foreach (string str in subDirs)
-            dirs.Push(str);
-    }
-
-    var json = JsonSerializer.Serialize(usingsStatistic);
-    File.WriteAllText("Usings.json", json);
+	usingStats = usingStats.OrderByDescending(x => x.Count).ToList();
+	GenerateXlsx(usingStats);
 }
 
-class UsingCount
+static void GetSubDirectoriesFromDirectory(string path, out string[]? subDirectories)
 {
-    public UsingCount(string usingName)
-    {
-        UsingName = usingName;
-        Count = 1;
-    }
+	try
+	{
+		subDirectories = Directory.GetDirectories(path);
+		return;
+	}
+	catch (UnauthorizedAccessException e)
+	{
+		Console.WriteLine(e.Message);
+	}
+	catch (DirectoryNotFoundException e)
+	{
+		Console.WriteLine(e.Message);
+	}
 
-    public string UsingName { get; set; }
-    public int Count { get; set; }
+	subDirectories = null;
+}
+
+static void GetFilesFromDirectory(string path, out string[]? files)
+{
+	try
+	{
+		files = Directory.GetFiles(path);
+		return;
+	}
+	catch (UnauthorizedAccessException e)
+	{
+		Console.WriteLine(e.Message);
+	}
+	catch (DirectoryNotFoundException e)
+	{
+		Console.WriteLine(e.Message);
+	}
+
+	files = null;
+}
+
+static List<string>? GetUsingsFromFile(string filePath)
+{
+	if (IsFileOmitted(filePath))
+		return null;
+
+	try
+	{
+		return ReadLinesAndReturnUsings(filePath);
+	}
+	catch (FileNotFoundException e)
+	{
+		Console.WriteLine(e.Message);
+	}
+
+	return null;
+}
+
+static bool IsFileOmitted(string filePath)
+{
+	return filePath.Contains("Migrations") || filePath.Contains("bin") || filePath.Contains("obj");
+}
+
+static List<string> ReadLinesAndReturnUsings(string filePath)
+{
+	var lines = File.ReadAllLines(filePath);
+	var usingsInFile = new List<string>();
+	foreach (var line in lines)
+	{
+		if (line.StartsWith("using"))
+		{
+			usingsInFile.Add(line);
+			continue;
+		}
+
+		if (line.StartsWith("namespace"))
+			break;
+	}
+
+	return usingsInFile;
+}
+
+static void AddUsingsFromFileToStatistics(List<string> usingsInFile, ICollection<UsingCount> usingStats)
+{
+	foreach (var singleUsing in usingsInFile)
+	{
+		var existingUsing = usingStats.FirstOrDefault(x => x.UsingName.Equals(singleUsing));
+		if (existingUsing is not null)
+			existingUsing.Count++;
+		else
+			usingStats.Add(new UsingCount(singleUsing));
+	}
+}
+
+static void GenerateXlsx(List<UsingCount> usingStats)
+{
+	SpreadsheetInfo.SetLicense("FREE-LIMITED-KEY");
+
+	var workbook = new ExcelFile();
+	var worksheet = workbook.Worksheets.Add("Usings");
+
+	worksheet.Cells[0, 0].Value = "Using name";
+	worksheet.Cells[0, 1].Value = "Count";
+
+	var row = 1;
+	foreach (var usingStat in usingStats)
+	{
+		worksheet.Cells[row, 0].Value = usingStat.UsingName;
+		worksheet.Cells[row, 1].Value = usingStat.Count;
+		row++;
+	}
+
+	workbook.Save("../../../Usings.xlsx");
 }
 
 //Delete empty regions regex: #region Usings\n\n#endregion\n\n
